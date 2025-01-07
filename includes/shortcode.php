@@ -42,10 +42,10 @@ function vca_gen_shortcode() {
         }
     </style>
     <form id="vca-gen-form" method="post" enctype="multipart/form-data">
-        <label for="name">Your Name:</label>
+        <label for="name">Jouw naam:</label>
         <input type="text" id="name" name="name" required>
         
-        <label for="photo">Upload Passport Photo:</label>
+        <label for="photo">Jouw pasfoto:</label>
         <input type="file" id="photo" name="photo" accept="image/*" required>
         
         <input type="submit" name="vca_gen_submit" value="Submit">
