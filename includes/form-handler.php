@@ -12,6 +12,11 @@ function vca_gen_handle_form_submission() {
         $name = sanitize_text_field($_POST['name']);
         $uploaded_file = $_FILES['photo'];
 
+        // Rename the file to the name of the person
+        $file_extension = pathinfo($uploaded_file['name'], PATHINFO_EXTENSION);
+        $new_file_name = sanitize_file_name($name) . '.' . $file_extension;
+        $uploaded_file['name'] = $new_file_name;
+
         // Handle file upload
         $upload_overrides = array('test_form' => false);
         $movefile = wp_handle_upload($uploaded_file, $upload_overrides);
@@ -28,8 +33,10 @@ function vca_gen_handle_form_submission() {
                 array(
                     'name' => $name,
                     'photo_url' => $photo_url
-                ) // Added missing closing parenthesis here
+                )
             );
+            wp_redirect(home_url('/thank-you'));
+            exit;
         } else {
             // Handle upload error (e.g., set an error message)
         }

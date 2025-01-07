@@ -41,13 +41,13 @@ function vca_gen_admin_page() {
             array( 'id' => $id )
         );
 
-        echo '<div class="updated"><p>Data updated successfully!</p></div>';
+        echo '<div class="updated"><p>Succesvol aangepast in de database</p></div>';
     }
 
     if ( isset( $_POST['delete'] ) ) {
         $id = intval( $_POST['id'] );
         $wpdb->delete( $table_name, array( 'id' => $id ) );
-        echo '<div class="updated"><p>Data deleted successfully!</p></div>';
+        echo '<div class="updated"><p>Het is succesvol uit de database verwijderd</p></div>';
     }
 
     $results = $wpdb->get_results( "SELECT * FROM $table_name" );
@@ -59,14 +59,14 @@ function vca_gen_admin_page() {
         <table class="widefat fixed" cellspacing="0">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Photo</th>
-                    <th>Certification Level</th>
-                    <th>Certificaatnummer</th>
-                    <th>Geldigheidsdatum</th>
-                    <th>Afgifte datum:</th>
-                    <th>Actions</th>
+                    <th style="width: 5%;">ID</th>
+                    <th style="width: 15%;">Name</th>
+                    <th style="width: 10%;">Photo</th>
+                    <th style="width: 20%;">Certification Level</th>
+                    <th style="width: 15%;">Certificaatnummer</th>
+                    <th style="width: 10%;">Geldigheidsdatum</th>
+                    <th style="width: 10%;">Afgifte datum:</th>
+                    <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -96,7 +96,7 @@ function vca_gen_admin_page() {
                         <input type="submit" name="update" value="Update" class="button button-primary">
                         <button type="button" class="button button-secondary" onclick="generateBusinessCard(<?php echo esc_attr( $row->id ); ?>)">Genereer VCA kaart</button>
                         <input type="hidden" name="id" value="<?php echo esc_attr( $row->id ); ?>">
-                        <input type="submit" name="delete" value="Delete" class="button button-danger" onclick="return confirm('Are you sure you want to delete this item?');">
+                        <input type="submit" name="delete" value="Delete" class="button button-danger" onclick="return confirm('Weet je zeker dat je dit uit de database wilt verwijderen? dit is permanent (dat is erg lang)');">
                        </td>                
                     </form>
                     </tr>
@@ -136,45 +136,63 @@ function vca_gen_generate_business_card() {
         $height_px = ($height_mm / 25.4) * $dpi;
 
         $image = imagecreatetruecolor($width_px, $height_px);
-        $background_color = imagecolorallocate($image, 255, 255, 255);
+        $background_color = imagecolorallocate($image, 31, 93, 170);
         imagefilledrectangle($image, 0, 0, $width_px, $height_px, $background_color);
-        $text_color = imagecolorallocate($image, 0, 0, 0);
+        $text_color = imagecolorallocate($image, 255, 255, 255);
 
         $font_path = __DIR__ . '/Arial.ttf'; // Ensure this path is correct
 
         if (file_exists($font_path)) {
-            imagettftext($image, 12, 0, 10, 20, $text_color, $font_path, "Name: " . $user_data->name);
-            imagettftext($image, 12, 0, 10, 50, $text_color, $font_path, "Certification Level: " . $user_data->certification_level);
-            imagettftext($image, 12, 0, 10, 80, $text_color, $font_path, "Certificaatnummer: " . $user_data->certificaatnummer);
-            imagettftext($image, 12, 0, 10, 110, $text_color, $font_path, "Geldigheidsdatum: " . $user_data->geldigheidsdatum);
-            imagettftext($image, 12, 0, 10, 140, $text_color, $font_path, "Afnamedatum " . $user_data->start_date);
+            imagettftext($image, 70, 0, 30, 100, $text_color, $font_path, $user_data->certification_level);
+            imagettftext($image, 30, 0, 30, 200, $text_color, $font_path, "Naam: " . $user_data->name);
+            imagettftext($image, 30, 0, 30, 280, $text_color, $font_path, "Geldig tot: " . $user_data->geldigheidsdatum);
+            imagettftext($image, 30, 0, 30, 360, $text_color, $font_path, "Afnamedatum: " . $user_data->start_date);
+            imagettftext($image, 30, 0, 30, 600, $text_color, $font_path, "Certificaatnummer: " . $user_data->certificaatnummer);
         } else {
-            imagestring($image, 5, 10, 20, "Font file not found.", $text_color);
+            imagestring($image, 5, 10, 30, "Font file not found.", $text_color);
         }
 
         // Add user photo to the business card
         if (!empty($user_data->photo_url)) {
             $photo = imagecreatefromjpeg($user_data->photo_url);
             if ($photo) {
+                // Correct orientation if needed
+                $exif = exif_read_data($user_data->photo_url);
+                if (!empty($exif['Orientation'])) {
+                    switch ($exif['Orientation']) {
+                        case 3:
+                            $photo = imagerotate($photo, 180, 0);
+                            break;
+                        case 6:
+                            $photo = imagerotate($photo, -90, 0);
+                            break;
+                        case 8:
+                            $photo = imagerotate($photo, 90, 0);
+                            break;
+                    }
+                }
+
                 $photo_width = imagesx($photo);
                 $photo_height = imagesy($photo);
-                $photo_dest_width = 100;
+                $photo_dest_width = 200;
                 $photo_dest_height = ($photo_height / $photo_width) * $photo_dest_width;
-                imagecopyresampled($image, $photo, $width_px - $photo_dest_width - 10, 10, 0, 0, $photo_dest_width, $photo_dest_height, $photo_width, $photo_height);
+                $photo_x = 700; 
+                $photo_y = 150; 
+                imagecopyresampled($image, $photo, $photo_x, $photo_y, 0, 0, $photo_dest_width, $photo_dest_height, $photo_width, $photo_height);
                 imagedestroy($photo);
             }
         }
 
-        // Add VCA logo to the business card
+        // Add MARVEL logo to the business card
         $logo_path = __DIR__ . '/logo.png'; 
         if (file_exists($logo_path)) {
             $logo = imagecreatefrompng($logo_path);
             if ($logo) {
                 $logo_width = imagesx($logo);
                 $logo_height = imagesy($logo);
-                $logo_dest_width = 400;
+                $logo_dest_width = 300;
                 $logo_dest_height = ($logo_height / $logo_width) * $logo_dest_width;
-                imagecopyresampled($image, $logo, 10, $height_px - $logo_dest_height - 10, 0, 0, $logo_dest_width, $logo_dest_height, $logo_width, $logo_height);
+                imagecopyresampled($image, $logo, $width_px - $logo_dest_width - 20, $height_px - $logo_dest_height - 20, 0, 0, $logo_dest_width, $logo_dest_height, $logo_width, $logo_height);
                 imagedestroy($logo);
             }
         }
@@ -186,7 +204,7 @@ function vca_gen_generate_business_card() {
 
         header('Content-Description: File Transfer');
         header('Content-Type: image/jpeg');
-        header('Content-Disposition: attachment; filename="business_card_' . $user_data->id . '.jpg"');
+        header('Content-Disposition: attachment; filename="vca_kaart_' . $user_data->id . '.jpg"');
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
