@@ -29,7 +29,7 @@ function vca_gen_shortcode() {
             box-sizing: border-box;
         }
         #vca-gen-form input[type="submit"] {
-            background-color: #0073aa;
+            background-color: #1F5DAA;
             color: #fff;
             border: none;
             padding: 10px 20px;
