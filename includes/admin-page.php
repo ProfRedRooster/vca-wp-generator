@@ -65,7 +65,7 @@ function vca_gen_admin_page() {
                     <th>Certification Level</th>
                     <th>Certificaatnummer</th>
                     <th>Geldigheidsdatum</th>
-                    <th>Start Date</th>
+                    <th>Afgifte datum:</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -77,7 +77,11 @@ function vca_gen_admin_page() {
                         <td><?php echo esc_html( $row->name ); ?></td>
                         <td><img src="<?php echo esc_url( $row->photo_url ); ?>" alt="User Photo" style="max-width: 100px; height: auto;"></td>
                         <td>
-                        <input type="text" id="certification_level_<?php echo esc_attr( $row->id ); ?>" name="certification_level" value="<?php echo esc_attr( $row->certification_level ); ?>" required>
+                            <select id="certification_level_<?php echo esc_attr( $row->id ); ?>" name="certification_level" required>
+                                <option value="">Selecteer behaald certificaat</option>
+                                <option value="B-VCA" <?php selected( $row->certification_level, 'B-VCA' ); ?>>B-VCA</option>
+                                <option value="VCA-VOL" <?php selected( $row->certification_level, 'VCA-VOL' ); ?>>VCA-VOL</option>
+                            </select>
                         </td>
                         <td>
                         <input type="text" id="certificaatnummer_<?php echo esc_attr( $row->id ); ?>" name="certificaatnummer" value="<?php echo esc_attr( $row->certificaatnummer ); ?>" required>
@@ -86,7 +90,7 @@ function vca_gen_admin_page() {
                         <input type="date" id="geldigheidsdatum_<?php echo esc_attr( $row->id ); ?>" name="geldigheidsdatum" value="<?php echo esc_attr( $row->geldigheidsdatum ); ?>" required>
                         </td>
                         <td>
-                        <input type="date" id="start_date_<?php echo esc_attr( $row->id ); ?>" name="Afgiftedatum" value="<?php echo esc_attr( $row->start_date ); ?>" required>
+                        <input type="date" id="start_date_<?php echo esc_attr( $row->id ); ?>" name="start_date" value="<?php echo esc_attr( $row->start_date ); ?>" required>
                         </td>
                         <td>
                         <input type="submit" name="update" value="Update" class="button button-primary">
