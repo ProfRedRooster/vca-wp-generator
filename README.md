@@ -1,11 +1,9 @@
 # VCA WP Generator
-
-## Beschrijving
-VCA WP Generator is een WordPress-plugin waarmee beheerders VCA-certificeringsgegevens voor gebruikers kunnen beheren.
+VCA WP Generator is een WordPress-plugin waarmee je VCA-certificeringsgegevens voor gebruikers automatisch op een jpg'tje kan zetten zodat je er pasjes van kan maken.
 
 ## Functies
 - Gebruikerscertificeringsgegevens toevoegen, bijwerken en verwijderen.
-- Een visitekaartje in JPG-formaat genereren voor elke gebruiker met hun certificeringsgegevens.
+- Een VCA-kaartje in JPG-formaat genereren voor elke gebruiker met hun certificeringsgegevens.
 
 ## Installatie
 1. Upload de release map naar de `/wp-content/plugins/` directory, of installeer de plugin direct via het WordPress-pluginscherm.
@@ -15,8 +13,11 @@ VCA WP Generator is een WordPress-plugin waarmee beheerders VCA-certificeringsge
 ## Gebruik
 1. Navigeer naar de 'VCA Gen' admin pagina.
 2. Bekijk en werk gebruikerscertificeringsgegevens bij.
-3. Klik op de knop "Genereer Visitekaartje" om een JPG-bestand te downloaden met de certificeringsgegevens van de gebruiker.
+3. Klik op de knop "Genereer VCA kaart" om een JPG-bestand te downloaden met de certificeringsgegevens van de gebruiker.
 
+De user interface
 ![1.png](DOCS/1.png)
+De admin interface
 ![2.png](DOCS/2.png)
+Het gegenereerde kaartje
 ![VCA.jpg](DOCS/VCA.jpg)
